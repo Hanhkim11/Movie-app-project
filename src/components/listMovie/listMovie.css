@@ -1,0 +1,20 @@
+.list-movie .slick-prev::before,
+.list-movie .slick-next::before {
+  color: #000;
+  font-size: 24px;
+}
+
+.list-movie .slick-next {
+  right: -30px;
+}
+
+.list-movie .slick-prev {
+  left: -50px;
+}
+
+.list-movie .slick-slide>div {
+  display: flex;
+  margin: 10px 0;
+}
+
+/* HTML: <div class="loader"></div> */
