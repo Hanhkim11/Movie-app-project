@@ -1,18 +1,32 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
 const useLocalStorage = (key) => {
   const [value, setValue] = useState(() => {
-    const item = localStorage.getItem(key);
-    return item ? JSON.parse(item) : null;
+    try {
+      const item = localStorage.getItem(key);
+      return item ? JSON.parse(item) : null;
+    } catch (e) {
+      return null;
+    }
   });
+
   useEffect(() => {
-    const handleChangStorage = () => {
-      const updateItem = localStorage.getItem(key);
-      setValue (updateItem ? JSON.parse(updateItem):null)
+    const updateValue = () => {
+      try {
+        const newValue = localStorage.getItem(key);
+        setValue(newValue ? JSON.parse(newValue) : null);
+      } catch (e) {
+        setValue(null);
+      }
     };
-    window.addEventListener('storage', handleChangStorage),
-    return () =>  window.removeEventListener('storage', handleChangeStorage);
+
+    window.addEventListener("local-storage-change", updateValue);
+
+    return () => {
+      window.removeEventListener("local-storage-change", updateValue);
+    };
   }, [key]);
+
   return value;
 };
 

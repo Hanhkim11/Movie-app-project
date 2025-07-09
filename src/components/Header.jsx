@@ -5,6 +5,7 @@ import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { NavLink } from "react-router-dom";
 import "./header.css";
 import { Avatar, Dropdown, Space } from "antd";
+import useLocalStorage from "../helpers/useLocalStorage";
 const navigation = [
   { name: "Home", href: "/" },
   { name: "Contact", href: "/" },
@@ -12,44 +13,32 @@ const navigation = [
 ];
 
 const Header = () => {
-  const [isLogin, setIsLogin] = useState(false);
-
-  // const userLogin = localStorage.getItem("userLogin");
-  // const currentUser = userLogin ? JSON.parse(userLogin) : null;
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  console.log(currentUser);
 
   const currentUser = useLocalStorage("userLogin");
-
-  useEffect(() => {
-    if (currentUser) {
-      setIsLogin(true);
-    } else {
-      setIsLogin(false);
-    }
-  }, [currentUser]);
 
   const getFirstLetter = () => {
     if (currentUser && currentUser.hoTen) {
       return currentUser.hoTen.charAt(0).toUpperCase();
     }
     return "A";
-  };
-
-  const handleLogout = () => {
+  }
+  const handlerLogout = () => {
     localStorage.removeItem("userLogin");
     window.location.reload();
-  };
+  }
+
   const items = [
     {
       label: (
-        <p onClick={handleLogout} className="text-red-600">
+        <p onClick={handlerLogout} className="text-red-500">
           Đăng xuất
         </p>
       ),
-      key: "0",
+      key: '0',
     },
   ];
+
+
   return (
     <>
       <header className="fixed inset-x-0 top-0 z-50 header">
@@ -82,26 +71,24 @@ const Header = () => {
           </div>
           <div className="hidden lg:flex lg:flex-1 lg:justify-end">
             {currentUser ? (
-              <Dropdown menu={{ items }} trigger={["click"]}>
-                <a onClick={(e) => e.preventDefault()}>
+              <Dropdown menu={{ items }} trigger={['click']}>
+                <a onClick={e => e.preventDefault()}>
                   <Space>
-                    <Avatar
-                      style={{ backgroundColor: "#f56a00", cursor: "pointer" }}
-                      size={50}
-                    >
+                    <Avatar style={{ backgroundColor: "#f56a00", cursor: "pointer" }} size={50} >
                       {getFirstLetter()}
                     </Avatar>
                   </Space>
                 </a>
               </Dropdown>
-            ) : (
-              <NavLink
-                to={"login"}
-                className="text-2xl font-semibold text-white"
-              >
-                Log in <span aria-hidden="true">&rarr;</span>
-              </NavLink>
-            )}
+
+
+            ) : (<NavLink
+              to={"login"}
+              className="text-2xl font-semibold text-white"
+            >
+              Log in <span aria-hidden="true">&rarr;</span>
+            </NavLink>)}
+
           </div>
         </nav>
       </header>

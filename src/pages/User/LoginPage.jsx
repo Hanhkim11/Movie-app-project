@@ -19,34 +19,36 @@ const LoginPage = () => {
         matKhau: state.values.matKhau,
       });
     }
-  }, [form, state]);
+  }, [form, state])
 
   const onFinish = (values) => {
-    api
-      .post("QuanLyNguoiDung/DangNhap", values)
+    api.post("QuanLyNguoiDung/DangNhap", values)
       .then((res) => {
-        console.log(res);
         messageApi.open({
           type: "success",
           content: "Login success",
           duration: 2,
         });
         localStorage.setItem("userLogin", JSON.stringify(res.data.content));
+        
+        window.dispatchEvent(new Event("local-storage-change"))
         // Navigate to the previous page or home page
-
         if (state?.isRegister) {
           navigate("/");
+          window.location.reload();
         } else {
+          window.location.reload();
           navigate(-1);
         }
-      })
-      .catch((err) => {
+
+      }).catch((err) => {
         messageApi.open({
           type: "error",
           content: err.response.data.content,
           duration: 2,
-        });
-      });
+        })
+      })
+
   };
 
   return (
@@ -73,6 +75,7 @@ const LoginPage = () => {
           <Title level={2}>Login</Title>
           <Form
             name="login"
+
             form={form}
             style={{ width: 570 }}
             onFinish={onFinish}

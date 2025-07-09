@@ -22,10 +22,7 @@ function App() {
           <Route path="register" element={<RegisterPage />} />
           <Route path="login" element={<LoginPage />} />
           <Route path="detail-movie/:id" element={<DetailMoviePage />} />
-          <Route
-            path="booking-tickets/:maLichChieu"
-            element={<BookingTickets />}
-          />
+          <Route path="booking-tickets/:maLichChieu" element={<BookingTickets />} />
         </Route>
       </Routes>
     </BrowserRouter>
