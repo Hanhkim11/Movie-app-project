@@ -11,10 +11,11 @@ const BookingTickets = () => {
   // Danh sách ghế
   const [listSeats, setListSeats] = useState([]);
   const [messageApi, contextHolder] = message.useMessage();
-  const [isLoading, setIsLoading] = useState(false);
 
   const params = useParams();
   const { maLichChieu } = params;
+  const [isLoading, setIsLoading] = useState(false);
+
   // Lấy thông tin người dùng từ localStorage
   const currentUser = localStorage.getItem("userLogin");
   //   Chuyển ddoooir chuổi Json thành đối tượng object
@@ -30,16 +31,14 @@ const BookingTickets = () => {
           setListTickets(res.data.content);
           setIsLoading(false);
         })
-        .catch((err) => {
-        })
+        .catch((err) => {})
         .finally(() => {
           setIsLoading(false);
-        })
-
+        });
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   useEffect(() => {
     // Gọi hàm lấy thông tin vé khi component được mount
@@ -47,7 +46,7 @@ const BookingTickets = () => {
   }, [maLichChieu]);
 
   const getInForTickets = (info) => {
-    console.log(info)
+    console.log(info);
     let isExist = listSeats.find((item) => item.maGhe === info.maGhe);
     // Kiểm tra ghế đã được chọn hay chưa
     if (!isExist) {
@@ -57,16 +56,15 @@ const BookingTickets = () => {
       // Nếu ghế đã được chọn, xóa khỏi danh sách ghế đã chọn
       setListSeats(listSeats.filter((item) => item.maGhe !== info.maGhe));
     }
-
-  }
-  console.log({ listSeats })
+  };
+  console.log({ listSeats });
 
   // Hàm render danh sách ghế
   const renderSeats = () => {
     return listSeats?.map((item, index) => {
       return item?.tenGhe + (index < listSeats.length - 1 ? ", " : "");
-    })
-  }
+    });
+  };
 
   console.log({ listTickets });
 
@@ -78,21 +76,22 @@ const BookingTickets = () => {
         ...listSeats?.map((item) => {
           return {
             maGhe: item?.maGhe,
-            giaVe: item?.giaVe
-          }
-        })
-      ]
-    }
+            giaVe: item?.giaVe,
+          };
+        }),
+      ],
+    };
     // Gọi API đặt vé
-    apiTickets.bookTickets(data)
+    apiTickets
+      .bookTickets(data)
       .then((res) => {
         console.log(res);
         // Hiển thị thông báo thành công
         messageApi.open({
-          type: 'success',
-          content: 'Đặt vé thành công!',
+          type: "success",
+          content: "Đặt vé thành công!",
           duration: 2,
-        })
+        });
         setListSeats([]); // Reset danh sách ghế đã chọn
         // Reset danh sách ghế đã chọn
         fetchApiMovies();
@@ -101,7 +100,7 @@ const BookingTickets = () => {
         console.log(err);
       });
     console.log(data);
-  }
+  };
 
   return (
     <div className="mt-40 grid grid-cols-4 gap-4 px-3">
@@ -113,57 +112,106 @@ const BookingTickets = () => {
         <div className="screen">Screen</div>
         {/* Danh sách ghế */}
         <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 xl:grid-cols-14 2xl:grid-cols-16 max-w-6xl mx-auto">
-          {isLoading
-            ? <div className="col-start-8 loader"></div>
-            : listTickets?.danhSachGhe.map((item, index) => {
+          {isLoading ? (
+            <div className="col-start-8 loader"></div>
+          ) : (
+            listTickets?.danhSachGhe.map((item, index) => {
               // Kiểm tra ghế đã được đặt hay chưa
               let isBooked = item.taiKhoanNguoiDat ? true : false;
 
               let isMyBooked = item.taiKhoanNguoiDat === userLogin?.taiKhoan;
 
-              let isSelected = listSeats.find((seat) => seat.maGhe === item.maGhe);
+              let isSelected = listSeats.find(
+                (seat) => seat.maGhe === item.maGhe
+              );
 
               return (
                 <div className="col-span-1 flex justify-center" key={index}>
                   <button
                     disabled={isBooked}
-                    type="button" className="button" onClick={() => getInForTickets(item)}>
+                    type="button"
+                    className="button"
+                    onClick={() => getInForTickets(item)}
+                  >
                     <div className="button-top">{item.tenGhe}</div>
                     {item.loaiGhe === "Thuong" ? (
-                      <div className={`button-bottom ${isSelected ? "!bg-blue-400" : isMyBooked ? "bg-green-400" : isBooked ? "!bg-red-400" : ""}`}></div>
+                      <div
+                        className={`button-bottom ${
+                          isSelected
+                            ? "!bg-blue-400"
+                            : isMyBooked
+                            ? "bg-green-400"
+                            : isBooked
+                            ? "!bg-red-400"
+                            : ""
+                        }`}
+                      ></div>
                     ) : (
                       <div
                         style={{ backgroundColor: "#ffb03c" }}
-                        className={`button-bottom ${isSelected ? "!bg-blue-400" : isMyBooked ? "!bg-green-400" : isBooked ? "!bg-red-400" : ""}`}
+                        className={`button-bottom ${
+                          isSelected
+                            ? "!bg-blue-400"
+                            : isMyBooked
+                            ? "!bg-green-400"
+                            : isBooked
+                            ? "!bg-red-400"
+                            : ""
+                        }`}
                       ></div>
                     )}
                     {/* <div className="button-base"></div> */}
                   </button>
                 </div>
               );
-            })}
+            })
+          )}
         </div>
 
         <div>
           <div className="my-10">
             <table className="w-full">
               <tr className="flex justify-between items-center">
-                <th className="flex flex-col justify-center items-center">Ghế đang chọn <div style={{ width: "50px", height: "50px" }} className="bg-blue-400"></div>
+                <th className="flex flex-col justify-center items-center">
+                  Ghế đang chọn{" "}
+                  <div
+                    style={{ width: "50px", height: "50px" }}
+                    className="bg-blue-400"
+                  ></div>
                 </th>
-                <th className="flex flex-col justify-center items-center">Ghế đã đặt<div style={{ width: "50px", height: "50px" }} className="bg-red-400"></div>
+                <th className="flex flex-col justify-center items-center">
+                  Ghế đã đặt
+                  <div
+                    style={{ width: "50px", height: "50px" }}
+                    className="bg-red-400"
+                  ></div>
                 </th>
-                <th className="flex flex-col justify-center items-center">Ghế của bạn<div style={{ width: "50px", height: "50px" }} className="bg-green-400"></div>
+                <th className="flex flex-col justify-center items-center">
+                  Ghế của bạn
+                  <div
+                    style={{ width: "50px", height: "50px" }}
+                    className="bg-green-400"
+                  ></div>
                 </th>
-                <th className="flex flex-col justify-center items-center">Ghế thường<div style={{ width: "50px", height: "50px" }} className="bg-gray-200"></div>
+                <th className="flex flex-col justify-center items-center">
+                  Ghế thường
+                  <div
+                    style={{ width: "50px", height: "50px" }}
+                    className="bg-gray-200"
+                  ></div>
                 </th>
-                <th className="flex flex-col justify-center items-center">Ghế Vip<div style={{ width: "50px", height: "50px" }} className="bg-orange-400"></div>
+                <th className="flex flex-col justify-center items-center">
+                  Ghế Vip
+                  <div
+                    style={{ width: "50px", height: "50px" }}
+                    className="bg-orange-400"
+                  ></div>
                 </th>
               </tr>
             </table>
           </div>
         </div>
       </div>
-
 
       <div className="info-booking-tickets col-span-1 p-10 bg-amber-200 rounded-2xl">
         <Divider>
@@ -185,7 +233,13 @@ const BookingTickets = () => {
         />
         <div className="flex justify-between gap-2 px-5">
           <p>Ghế: {renderSeats()}</p>
-          <p>Giá: {listSeats?.reduce((total, item) => total + item?.giaVe, 0).toLocaleString()} đ</p>
+          <p>
+            Giá:{" "}
+            {listSeats
+              ?.reduce((total, item) => total + item?.giaVe, 0)
+              .toLocaleString()}{" "}
+            đ
+          </p>
         </div>
         <Divider
           variant="dashed"
@@ -197,8 +251,10 @@ const BookingTickets = () => {
           <p>Email: {userLogin?.email}</p>
           <p>Số điện thoại: {userLogin?.soDT}</p>
         </div>
-        <Button className="mt-10 w-full !p-5 !text-2xl !font-semibold"
-          onClick={bookingTickets}>
+        <Button
+          className="mt-10 w-full !p-5 !text-2xl !font-semibold"
+          onClick={bookingTickets}
+        >
           Đặt vé
         </Button>
       </div>
