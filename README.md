@@ -1,1 +1,1 @@
-https://movie-capstone-project3.netlify.app/
+https://movie-app-capstone-project.netlify.app/
